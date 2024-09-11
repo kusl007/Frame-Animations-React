@@ -75,7 +75,7 @@ const App = () => {
     const tl=gsap.timeline({
       scrollTrigger:{
         trigger:parentDivRef.current,
-        markers:true,
+        // markers:true,
         start:"top top",
         scrub:2,
         end:"bottom bottom",
