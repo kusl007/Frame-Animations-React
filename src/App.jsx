@@ -1,8 +1,11 @@
+import { useGSAP } from "@gsap/react";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import gsap from "gsap";
 import React, { useEffect, useRef, useState } from "react";
-
+gsap.registerPlugin(ScrollTrigger)
 const App = () => {
   // current Index and max Index
-  const [vals,setVals] = useState({currentIndex: 0, maxIndex: 422});
+  const [vals,setVals] = useState({currentIndex: 0, maxIndex: 421});
   const imagesLoaded=useRef(0)
   const imageObject=useRef([])
   const canvasRef =useRef(null)
@@ -31,10 +34,8 @@ const App = () => {
     
   }
 }
-
   //load images in the background
   //resize canvas
-
   const loadImages = (index) => {
     // console.log("hellooooooo")
     if(index>=0 && index<=vals.maxIndex){
@@ -68,11 +69,31 @@ const App = () => {
       }
     }
   }
+
+  const parentDivRef =useRef(null)
+  useGSAP(() => {
+    const tl=gsap.timeline({
+      scrollTrigger:{
+        trigger:parentDivRef.current,
+        markers:true,
+        start:"top top",
+        scrub:2,
+        end:"bottom bottom",
+      }
+    })
+    tl.to(vals,{
+      currentIndex:vals.maxIndex,
+      onUpdate:() => {
+        loadImages(Math.floor(vals.currentIndex))
+      }
+      // ease:"none",
+    })
+  })
   
 
   return (
     <div className="w-full bg-zinc-900 ">
-      <div className="w-full h-[400vh]">
+      <div ref={parentDivRef} className="w-full h-[800vh]">
         <div className="w-full h-screen sticky left-0 top-0 ">
           <canvas  ref={canvasRef} className="w-full h-screen ">
            
